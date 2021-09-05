@@ -22,13 +22,16 @@ Rewards are given to agents depending on how long they survive. An agent who sur
 
 ### Early generational behaviour
 For epsilon = 0.9, we can observe a very random behaviour. The agents have no clear strategy. It is, however, still a viable means of surviving, as it is difficult to predict randomness. 
-https://user-images.githubusercontent.com/54723095/132140076-98793407-0979-4083-b2d4-49d02d5e998e.mp4
+
+https://user-images.githubusercontent.com/54723095/132140742-45f641c8-566c-4e93-9dcf-82743937b13f.mp4
+
 
 ### Mid generational behaviour
 For epsilon = 0.5, agents start to get more coordinated. Typically, we can observe agents going along walls away from the predator.
-https://user-images.githubusercontent.com/54723095/132140081-00db869e-e8a2-4804-95b7-5ccc924e6b76.mp4
+
+https://user-images.githubusercontent.com/54723095/132140752-63e247e2-aaa5-472d-8fda-4a831e75956d.mp4
 
 ### Late generational behaviour
 For low epsilon, the above strategy is even more clearly seen.
-https://user-images.githubusercontent.com/54723095/132139895-8fd17b2b-7c4b-4ab4-af55-bed68e555085.mp4
 
+https://user-images.githubusercontent.com/54723095/132140756-66e2ba48-488c-485e-b8b1-d78d8e589492.mp4
