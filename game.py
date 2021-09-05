@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from q_learning.predator_game.movement_handling import move, confine_particles
-from q_learning.predator_game.prey.agent import Prey
+from movement_handling import move, confine_particles
+from prey.agent import Prey
 import keyboard
 from matplotlib.font_manager import FontProperties
 

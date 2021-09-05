@@ -1,6 +1,6 @@
 import torch
-from q_learning.predator_game.movement_handling import *
-from q_learning.predator_game.prey.brain import RecurrentNetwork
+from movement_handling import *
+from prey.brain import RecurrentNetwork
 from numpy.random import random
 from typing import Literal
 
