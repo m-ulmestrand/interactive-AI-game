@@ -20,6 +20,8 @@ Rewards are given to agents depending on how long they survive. An agent who sur
 
 ## Some videos of the game
 
+Below, I show some videos of the game in action. The game can be customised with a range of different parameters such as network sequence length, episode length, learning parameters, distance normalisation etc. In these videos, the settings are fixed.
+
 ### Early generational behaviour
 For epsilon = 0.9, we can observe a very random behaviour. The agents have no clear strategy. It is, however, still a viable means of surviving, as it is difficult to predict randomness. 
 
