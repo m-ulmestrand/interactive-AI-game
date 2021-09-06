@@ -1,5 +1,5 @@
 from numba import njit
-from numpy import argwhere, sum, flatnonzero, sqrt
+from numpy import argwhere, sum, flatnonzero, sqrt, inf
 import numpy as np
 from scipy.spatial import cKDTree
 
@@ -63,3 +63,7 @@ def update_v(v, acc, speed):
 def move(positions, v):
     positions += v
 
+
+@njit
+def get_dead_indices(agents, int_max):
+    return agents[:, 0][agents[:, 1] < int_max]
