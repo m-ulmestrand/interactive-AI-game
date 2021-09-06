@@ -38,6 +38,13 @@ For low epsilon, the above strategy is even more clearly seen.
 
 https://user-images.githubusercontent.com/54723095/132140756-66e2ba48-488c-485e-b8b1-d78d8e589492.mp4
 
+### Longer network memory
+For an LSTM with longer memory, the strategy is similar, but a bit more well-planned.
+
+https://user-images.githubusercontent.com/54723095/132211777-9bb9cf84-db61-4cdd-8612-d78560ff5e08.mp4
+
+
+
 ## Running the game
 
 Download the files and run game.py. You control the predator with:
@@ -46,6 +53,6 @@ Download the files and run game.py. You control the predator with:
 
 ## Dependencies
 
-The neural network is designed with PyTorch (1.8.1+cu102). In addition, NumPy (1.18.5) is used for many operations and information storing. To remove a lot of computational burden, I have used Numba (0.51.2) for several movement handling operations, as well as distance measuring etc. Scipy (1.4.1) is also imported. It is not actively used at the moment, but may be for future releases.
+The neural network is designed with PyTorch (1.8.1+cu102). In addition, NumPy (1.18.5) is used for many operations and information storing. To remove a lot of computational burden, I have used Numba (0.51.2) for several movement handling operations, as well as distance measuring etc. Scipy (1.4.1) is also imported. It is not actively used at the moment, but may be for future releases. I also use the keyboard module (0.13.5) and matplotlib (3.2.2) for plotting.
 
 The game will do do forward-passing with GPU if you have one available. I'm using an Nvidia GTX 1080, and the application runs quite smoothly. 
