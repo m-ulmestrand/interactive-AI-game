@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from movement_handling import move, confine_particles
+from movement_handling import move, confine_particles, get_dead_indices
 from prey.agent import Prey
 import keyboard
 from matplotlib.font_manager import FontProperties
@@ -76,8 +76,9 @@ while plt.fignum_exists(fig.number):
     confine_particles(position, v, box_size, box_size, radius)
     move(position, v)
 
+    prey.respawn()
     prey.select_actions(position[0], radius, v[0])
-    dead_indices = prey.dead_agents[:, 0]
+    dead_indices = get_dead_indices(prey.agents, prey.int_max)
     reinitialize = prey.reward()
     reinforced_loss = prey.reinforce(train_size=500)
 
@@ -102,7 +103,7 @@ while plt.fignum_exists(fig.number):
 
 stats_figure, stats_ax = plt.subplots(1, 2, sharex=True)
 stats_figure.set_size_inches(12.5, 5)
-stats_ax[0].plot(kills_history[:, 0], kills_history[:, 1], 'k')
+stats_ax[0].plot(kills_history[:, 0], np.cumsum(kills_history[:, 1]), 'k')
 stats_ax[0].set_title("Number of kills per generation")
 stats_ax[0].set_ylabel("Kills")
 stats_ax[1].plot(loss_history[:, 0], loss_history[:, 1], 'k')

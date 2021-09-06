@@ -16,9 +16,10 @@ class Prey:
                  acceleration: float = 0.0125, latent_period: int = 10, network_memory: int = 10,
                  discount: float = 0.95, epsilon_start: float = 0.9, epsilon_scale: int = 25,
                  epsilon_final: float = 0.01, episode_length: int = 500, batch_size: int = 100,
-                 buffer_size: int = 25000, buffer_behaviour: Literal["until_full", "discard_old"] = "until_full",
+                 buffer_size: int = 5000, buffer_behaviour: Literal["until_full", "discard_old"] = "until_full",
                  buffer_append_prob: float = 0.3, network_params: tuple = (2, 20, 2), learning_rate: float = 0.001,
-                 preprocessing: Literal["max_distance", "box_size"] = "max_distance",  reinforce_period: int = 100):
+                 preprocessing: Literal["max_distance", "box_size"] = "max_distance",  reinforce_period: int = 100,
+                 train_size=1000):
 
         self.box_size = box_size
         self.n = n
@@ -44,7 +45,9 @@ class Prey:
         self.episode_length = episode_length
         self.n_features = 2
         self.history = np.zeros((self.n, self.episode_length, self.n_features))
-        self.dead_agents = np.zeros((0, 2), dtype='intc')
+        self.int_max = np.iinfo('intc').max
+        self.agents = np.ones((n, 3), dtype='intc') * self.int_max
+        self.agents[:, 0] = np.arange(n)
         self.old_states = torch.zeros((0, self.network_memory, 2), dtype=torch.double)
         self.states = torch.zeros((0, self.network_memory, 2), dtype=torch.double)
         self.rewards = torch.zeros((0, 1), dtype=torch.double)
@@ -61,30 +64,39 @@ class Prey:
         self.total_loss = 0
         self.preprocessing = preprocessing
         self.reinforce_period = reinforce_period
+        self.train_size = train_size
 
     def reinitialize(self):
-        self.positions = np.random.random((self.n, 2))
-        self.positions *= self.box_size
-        angles = np.random.random(self.n) * 2 * np.pi
-        self.v = np.zeros((self.n, 2))
-        self.v[:, 0] = np.cos(angles) * self.speed
-        self.v[:, 1] = np.sin(angles) * self.speed
-        self.a = np.zeros_like(self.v)
+        dead_indices = get_dead_indices(self.agents, self.int_max)
+        self.agents[dead_indices, 2] = self.agents[dead_indices, 1]
         self.count = 0
         self.history = np.zeros((self.n, self.episode_length, 2))
-        self.dead_agents = np.zeros((0, 2), dtype='intc')
 
     def get_epsilon(self):
         return max(self.epsilon_start - self.episode / self.epsilon_scale, self.epsilon_final)
 
-    def exploration(self, indices):
+    def respawn(self):
+        # Check inbetween other timestamps to distribute the computational burden better.
+        # If we'd have taken 'self.count % self.latent_period' == 0, it'd have been at the same time as select_actions.
+        if (self.count + self.latent_period//2) % self.latent_period == 0:
+            respawn_inds = np.flatnonzero(self.agents[:, 2] <= self.count)
+            if respawn_inds.size > 0:
+                self.agents[respawn_inds, 1:] = self.int_max
+                self.positions[respawn_inds] = np.random.random((respawn_inds.size, 2)) * self.box_size
+                angles = np.random.random(respawn_inds.size) * 2 * np.pi
+                self.v[respawn_inds] = np.zeros((respawn_inds.size, 2))
+                self.v[respawn_inds, 0] = np.cos(angles) * self.speed
+                self.v[respawn_inds, 1] = np.sin(angles) * self.speed
+                self.a[respawn_inds] = np.zeros((respawn_inds.size, 2))
+
+    def exploration(self, indices, dead_indices):
         epsilon = self.get_epsilon()
         n = indices.size
         acc = self.acceleration
 
         random_n = random(n)
         exploration_indices = indices[random_n < epsilon]
-        dead_indices = np.argwhere(np.isin(self.dead_agents[:, 0], exploration_indices))
+        dead_indices = np.argwhere(np.isin(dead_indices, exploration_indices))
         exploration_indices = np.delete(exploration_indices, dead_indices)
         n_exploration = exploration_indices.size
 
@@ -104,10 +116,10 @@ class Prey:
 
         return indices[random_n > epsilon]
 
-    def exploitation(self, exploit_indices, pred_position, pred_v):
+    def exploitation(self, exploit_indices, pred_position, pred_v, dead_indices):
         network = self.network
         network.eval()
-        dead_indices = np.argwhere(np.isin(self.dead_agents[:, 0], exploit_indices))
+        dead_indices = np.argwhere(np.isin(dead_indices, exploit_indices))
         exploit_indices = np.delete(exploit_indices, dead_indices)
         if exploit_indices.size > 0:
 
@@ -175,18 +187,18 @@ class Prey:
     def select_actions(self, pred_position, pred_radius, pred_v):
 
         if self.count % self.latent_period == 0 and self.count >= self.network_memory-1:
-            living_indices = np.delete(np.arange(self.n), self.dead_agents[:, 0])
+            dead_indices = get_dead_indices(self.agents, self.int_max)
+            living_indices = np.delete(np.arange(self.n), dead_indices)
             living_history = self.history[living_indices, self.count-1, 0]
             collision_inds = living_indices[get_collision_indices(living_history, pred_radius, self.radius)]
-            collision_inds = collision_inds.reshape((collision_inds.size, 1))
-            collision_inds = np.append(collision_inds, self.count * np.ones_like(collision_inds), axis=1)
-            self.dead_agents = np.append(self.dead_agents, collision_inds, axis=0)
+            self.agents[collision_inds, 1] = self.count
+            dead_indices = get_dead_indices(self.agents, self.int_max)
 
             # Exploration
-            exploit_indices = self.exploration(living_indices)
+            exploit_indices = self.exploration(living_indices, dead_indices)
 
             # Exploitation
-            self.exploitation(exploit_indices, pred_position, pred_v)
+            self.exploitation(exploit_indices, pred_position, pred_v, dead_indices)
 
         update_v(self.v, self.a, self.speed)
         move(self.positions, self.v)
@@ -197,19 +209,18 @@ class Prey:
         self.count += 1
 
     def reward(self):
-        count = self.count
+        t = self.count + 1
         episode_length = self.episode_length
-        network_memory = self.network_memory
-        t = count + 1
         if t == episode_length:
+            network_memory = self.network_memory
             self.episode += 1
             t_diff = self.latent_period
-            dead_indices = self.dead_agents[:, 0]
-            for index in range(self.n):
-                if index in dead_indices:
-                    time_of_death = self.dead_agents[:, 1][dead_indices == index][0]
-                    time1 = np.arange(network_memory, time_of_death, t_diff)
-                    time2 = np.arange(t_diff + network_memory, time_of_death+t_diff, t_diff)
+            for index in np.arange(self.n):
+                respawn_time = 0 if self.agents[index, 2] == self.int_max else self.agents[index, 2]
+                time_of_death = self.agents[index, 1]
+                if time_of_death < self.int_max:
+                    time1 = np.arange(network_memory, time_of_death - respawn_time, t_diff)
+                    time2 = np.arange(t_diff + network_memory, time_of_death - respawn_time + t_diff, t_diff)
                     old_states = np.zeros((len(time2), self.network_memory, self.n_features))
                     new_states = np.zeros((len(time2), self.network_memory, self.n_features))
                     rewards = np.zeros((len(time2), 1))
@@ -222,8 +233,8 @@ class Prey:
                         i += 1
                     self.append_to_buffer(old_states, new_states, rewards)
                 else:
-                    time1 = np.arange(network_memory, self.episode_length, t_diff)
-                    time2 = np.arange(t_diff + network_memory, self.episode_length + t_diff, t_diff)
+                    time1 = np.arange(network_memory, self.episode_length - respawn_time, t_diff)
+                    time2 = np.arange(t_diff + network_memory, self.episode_length - respawn_time + t_diff, t_diff)
                     old_states = np.zeros((len(time2), self.network_memory, self.n_features))
                     new_states = np.zeros((len(time2), self.network_memory, self.n_features))
                     rewards = np.zeros((len(time2), 1))
@@ -236,7 +247,7 @@ class Prey:
                         i += 1
                     self.append_to_buffer(old_states, new_states, rewards)
 
-            self.reinforce(train_size=self.rewards.shape[0])
+            self.reinforce()
             self.reinitialize()
             return True
 
@@ -264,7 +275,7 @@ class Prey:
             if self.rewards.shape[0] > self.buffer_size:
                 self.pop_tensors()
 
-    def reinforce(self, train_size=1000, epochs=1):
+    def reinforce(self, epochs=1):
         if (self.count + 1) % self.reinforce_period == 0 and self.episode > 0:
             train_count = 0
             batch_size = self.batch_size
@@ -272,7 +283,7 @@ class Prey:
                 dataset_size = self.rewards.shape[0]
                 permutation_indices = torch.randperm(dataset_size)
                 n_train = train_count * batch_size
-                while n_train < train_size and n_train < dataset_size != 0:
+                while n_train < self.train_size and n_train < dataset_size != 0:
                     indices = permutation_indices[n_train:n_train+batch_size]
                     self.step_gradient(indices)
                     train_count += 1
