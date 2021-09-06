@@ -38,6 +38,13 @@ For low epsilon, the above strategy is even more clearly seen.
 
 https://user-images.githubusercontent.com/54723095/132140756-66e2ba48-488c-485e-b8b1-d78d8e589492.mp4
 
+### Longer network memory
+For an LSTM with longer memory, the strategy is similar, but a bit more well-planned.
+
+https://user-images.githubusercontent.com/54723095/132211777-9bb9cf84-db61-4cdd-8612-d78560ff5e08.mp4
+
+
+
 ## Running the game
 
 Download the files and run game.py. You control the predator with:
