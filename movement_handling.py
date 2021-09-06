@@ -1,4 +1,4 @@
-from numba import njit, jit, prange
+from numba import njit
 from numpy import argwhere, sum, flatnonzero, sqrt
 import numpy as np
 from scipy.spatial import cKDTree
