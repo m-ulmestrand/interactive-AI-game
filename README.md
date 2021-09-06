@@ -37,3 +37,7 @@ https://user-images.githubusercontent.com/54723095/132140752-63e247e2-aaa5-472d-
 For low epsilon, the above strategy is even more clearly seen.
 
 https://user-images.githubusercontent.com/54723095/132140756-66e2ba48-488c-485e-b8b1-d78d8e589492.mp4
+
+## Dependencies
+
+The neural network is designed with PyTorch. In addition, NumPy is used for many operations and information storing. To remove a lot of computational burden, I have used Numba for several movement handling operations, as well as distance measuring etc. Scipy is also imported. It is not actively used at the moment, but perhaps for future releases.
