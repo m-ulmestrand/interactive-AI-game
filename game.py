@@ -36,7 +36,8 @@ period = np.pi * 2
 kills_history = np.zeros((0, 2))
 loss_history = np.zeros((0, 2))
 
-prey = Prey(box_size, n_prey, buffer_size=5000, buffer_behaviour="discard_old", epsilon_final=0.15, episode_length=800)
+prey = Prey(box_size, n_prey, buffer_size=5000, buffer_behaviour="discard_old", epsilon_final=0.15, episode_length=800,
+            preprocessing="box_size", network_memory=30)
 colormap = plt.cm.get_cmap('viridis')
 predator_color = np.array([0.5, 0.1, 0.2, 1])
 colors = np.array([colormap(0.2 + 0.6 * i/(n_prey-1)) for i in range(n_prey)] + [predator_color])

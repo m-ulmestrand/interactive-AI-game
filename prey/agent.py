@@ -232,7 +232,7 @@ class Prey:
                     for t_1, t_2 in zip(time1, time2):
                         new_states[i] = self.history[index, t_2 - network_memory:t_2]
                         old_states[i] = self.history[index, t_1 - network_memory:t_1]
-                        rewards[i] = (1 - dead_indices.size / self.n)*(t_2 / self.episode_length)**2
+                        rewards[i] = (t_2 / self.episode_length)**2
                         i += 1
                     self.append_to_buffer(old_states, new_states, rewards)
 
