@@ -20,7 +20,7 @@ Rewards are given to agents depending on how long they survive. An agent who sur
 
 ## Some videos of the game
 
-Below, I show some videos of the game in action. The game can be customised with a range of different parameters such as network sequence length, episode length, learning parameters, distance normalisation etc. In these videos, the settings are fixed.
+Below, I show some videos of the game in action. The game can be customised with a range of different parameters such as network sequence length, episode length, learning parameters, distance normalisation etc. In these videos, the settings are fixed. The larger red individual was controlled by myself. 
 
 ### Early generational behaviour
 For epsilon = 0.9, we can observe a very random behaviour. The agents have no clear strategy. It is, however, still a viable means of surviving, as it is difficult to predict randomness. 
@@ -37,6 +37,12 @@ https://user-images.githubusercontent.com/54723095/132140752-63e247e2-aaa5-472d-
 For low epsilon, the above strategy is even more clearly seen.
 
 https://user-images.githubusercontent.com/54723095/132140756-66e2ba48-488c-485e-b8b1-d78d8e589492.mp4
+
+## Running the game
+
+Download the files and run game.py. You control the predator with:
+1. Left arrow or 'A' for turning counter-clockwise,
+2. Right arror or 'D' for turning clockwise.
 
 ## Dependencies
 
