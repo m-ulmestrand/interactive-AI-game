@@ -46,4 +46,6 @@ Download the files and run game.py. You control the predator with:
 
 ## Dependencies
 
-The neural network is designed with PyTorch. In addition, NumPy is used for many operations and information storing. To remove a lot of computational burden, I have used Numba for several movement handling operations, as well as distance measuring etc. Scipy is also imported. It is not actively used at the moment, but may be for future releases.
+The neural network is designed with PyTorch (1.8.1+cu102). In addition, NumPy (1.18.5) is used for many operations and information storing. To remove a lot of computational burden, I have used Numba (0.51.2) for several movement handling operations, as well as distance measuring etc. Scipy (1.4.1) is also imported. It is not actively used at the moment, but may be for future releases.
+
+The game will do do forward-passing with GPU if you have one available. I'm using an Nvidia GTX 1080, and the application runs quite smoothly. 
