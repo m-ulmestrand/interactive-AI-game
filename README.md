@@ -1,9 +1,9 @@
 # interactive-AI-game
 ## Welcome to this project!
 
-This is a prototype of a game which lets the player control a predator, whose objective is to devour prey agents. The agents learn to avoid the player from experience in real time. My interest for this subject arose from not previously having seen a project of this sort. Machine learning has avidly been applied for games such as Go, Tetris, Super Mario etc. However, I haven't yet witnessed it as an actual mechanism in a video game. 
+This is a prototype of a game which lets the player control a predator, whose objective is to devour prey agents. The agents learn to avoid the player from experience in real time. My interest for this subject arose from not previously having seen a project of this sort. Machine learning has avidly been applied for games such as Go, Tetris, Super Mario etc. However, I haven't yet witnessed it as an actual mechanism in a video game, where your environment learns from your actions. 
 
-I'll proceed to give a brief explanation of the construction of the game.
+The game is split up into generations, but the agents actively learn at the same time as you are playing. I'll proceed to give a brief explanation of the construction of the game.
 
 ## Neural network
 ### LSTM
@@ -20,6 +20,8 @@ Rewards are given to agents depending on how long they survive. An agent who sur
 
 ## Some videos of the game
 
+Below, I show some videos of the game in action. The game can be customised with a range of different parameters such as network sequence length, episode length, learning parameters, distance normalisation etc. In these videos, the settings are fixed.
+
 ### Early generational behaviour
 For epsilon = 0.9, we can observe a very random behaviour. The agents have no clear strategy. It is, however, still a viable means of surviving, as it is difficult to predict randomness. 
 
@@ -35,3 +37,7 @@ https://user-images.githubusercontent.com/54723095/132140752-63e247e2-aaa5-472d-
 For low epsilon, the above strategy is even more clearly seen.
 
 https://user-images.githubusercontent.com/54723095/132140756-66e2ba48-488c-485e-b8b1-d78d8e589492.mp4
+
+## Dependencies
+
+The neural network is designed with PyTorch. In addition, NumPy is used for many operations and information storing. To remove a lot of computational burden, I have used Numba for several movement handling operations, as well as distance measuring etc. Scipy is also imported. It is not actively used at the moment, but may be for future releases.
