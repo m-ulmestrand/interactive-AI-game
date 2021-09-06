@@ -1,9 +1,9 @@
 # interactive-AI-game
 ## Welcome to this project!
 
-This is a prototype of a game which lets the player control a predator, whose objective is to devour prey agents. The agents learn to avoid the player from experience in real time. My interest for this subject arose from not previously having seen a project of this sort. Machine learning has avidly been applied for games such as Go, Tetris, Super Mario etc. However, I haven't yet witnessed it as an actual mechanism in a video game, where your environment learns from your actions. The game is split up into generations, but the agents actively learn at the same time as you are playing.
+This is a prototype of a game which lets the player control a predator, whose objective is to devour prey agents. The agents learn to avoid the player from experience in real time. My interest for this subject arose from not previously having seen a project of this sort. Machine learning has avidly been applied for games such as Go, Tetris, Super Mario etc. However, I haven't yet witnessed it as an actual mechanism in a video game, where your environment learns from your actions. 
 
-I'll proceed to give a brief explanation of the construction of the game.
+The game is split up into generations, but the agents actively learn at the same time as you are playing. I'll proceed to give a brief explanation of the construction of the game.
 
 ## Neural network
 ### LSTM
