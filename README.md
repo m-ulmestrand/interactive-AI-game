@@ -2,7 +2,11 @@
 ## Welcome to this project!
 
 
-https://user-images.githubusercontent.com/54723095/132262882-1e4fa658-080f-41e3-8897-46f4e3d62ab7.mp4
+
+
+https://user-images.githubusercontent.com/54723095/132262962-628bb96b-cbb5-429a-a685-97225fb1cce4.mp4
+
+
 Footage taken from the game, about 5 minutes in real time.
 
 This is a prototype of a game which lets the player control a predator, whose objective is to devour prey agents. The agents learn to avoid the player from experience in real time. My interest for this subject arose from not previously having seen a project of this sort. Machine learning has avidly been applied for games such as Go, Tetris, Super Mario etc. However, I haven't yet witnessed it as an actual mechanism in a video game, where your environment learns from your actions. 
