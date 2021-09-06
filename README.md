@@ -1,6 +1,8 @@
 # interactive-AI-game
 ## Welcome to this project!
 
+https://user-images.githubusercontent.com/54723095/132262292-c6554fed-3f06-4c59-929d-d923eb25a7c4.mp4
+
 This is a prototype of a game which lets the player control a predator, whose objective is to devour prey agents. The agents learn to avoid the player from experience in real time. My interest for this subject arose from not previously having seen a project of this sort. Machine learning has avidly been applied for games such as Go, Tetris, Super Mario etc. However, I haven't yet witnessed it as an actual mechanism in a video game, where your environment learns from your actions. 
 
 The game is split up into generations, but the agents actively learn at the same time as you are playing. I'll proceed to give a brief explanation of the construction of the game.
