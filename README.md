@@ -1,5 +1,4 @@
 # interactive-AI-game
-## Welcome to this project!
 
 
 
